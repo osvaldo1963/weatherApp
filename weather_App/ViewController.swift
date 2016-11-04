@@ -8,7 +8,13 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController{
+    @IBOutlet weak var dateLabel   : UILabel!
+    @IBOutlet weak var temperatur  : UILabel!
+    @IBOutlet weak var location    : UILabel!
+    @IBOutlet weak var weatherImage: UIImageView!
+    @IBOutlet weak var weatherType : UILabel!
+    @IBOutlet weak var CustomTable : UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
