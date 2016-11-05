@@ -9,12 +9,15 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
     @IBOutlet weak var dateLabel   : UILabel!
     @IBOutlet weak var temperatur  : UILabel!
     @IBOutlet weak var location    : UILabel!
     @IBOutlet weak var weatherImage: UIImageView!
     @IBOutlet weak var weatherType : UILabel!
     @IBOutlet weak var CustomTable : UITableView!
+    
+    let alamoreRequest = CurrentWeather()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +25,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.CustomTable.delegate = self
         self.CustomTable.dataSource = self
         self.CustomTable.rowHeight = 70
+        self.alamoreRequest.downloadWeatherDetails { 
+            result in
+            print(result)
+        }
+        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
