@@ -53,9 +53,21 @@ class CurrentWeather {
         let currentWeatherURL = URL(string: CURRENT_WEATHER_URL)
         if let url = currentWeatherURL {
             Alamofire.request(url).responseJSON { response in
-                if let json = response.result.value {
-                    print(json)
+                if let dic = response.result.value as? Dictionary<String, AnyObject> {
+                    guard let name = dic["name"] as? String, name != "" else {
+                        return
+                    }
+                    self._cityName = name
+                    guard let weather = dic["weather"] , weather != nil else {
+                        return
+                    }
+                    
+                    print(name)
+                   
+                    
                 }
+                
+                
             }
             completed()
         }
