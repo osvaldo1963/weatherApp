@@ -57,20 +57,31 @@ class CurrentWeather {
                     guard let name = dic["name"] as? String, name != "" else {
                         return
                     }
-                    self._cityName = name
-                    guard let weather = dic["weather"] , weather != nil else {
+                    guard let weather = dic["weather"] as? [Dictionary<String, AnyObject>], weather != nil else {
+                        return
+                    }
+                    guard let wtype = weather[0]["main"] as? String, wtype != "" else {
+                        return
+                    }
+                    guard let main = dic["main"] as? Dictionary<String, AnyObject>, main != nil else {
                         return
                     }
                     
-                    print(name)
-                   
-                    
+                    guard let temp = main["temp"] as? Double, temp != 0.0 else {
+                        return
+                    }
+                    self._cityName    = name
+                    self._weatherType = wtype 
+                    self._currentTemp = temp
+                    print(self._cityName)
+                    print(self._weatherType)
+                    print(self._currentTemp)
+                
                 }
-                
-                
             }
-            completed()
+            
         }
+       completed() 
     }
     
 }

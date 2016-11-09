@@ -17,7 +17,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var weatherType : UILabel!
     @IBOutlet weak var CustomTable : UITableView!
     
-    let alamoreRequest = CurrentWeather()
+    var alamoreRequest : CurrentWeather!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +25,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.CustomTable.delegate = self
         self.CustomTable.dataSource = self
         self.CustomTable.rowHeight = 70
-        self.alamoreRequest.downloadWeatherDetails { 
-            result in
-            print(result)
+        self.alamoreRequest = CurrentWeather()
+        self.alamoreRequest.downloadWeatherDetails {
+            self.weatherui()
         }
         
     }
@@ -43,5 +43,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let cell = tableView.dequeueReusableCell(withIdentifier: "weatherCell", for: indexPath)
         return cell
     }
+    
+    func weatherui() {
+        print(alamoreRequest.cityName)
+        self.dateLabel.text = alamoreRequest.date
+        self.temperatur.text = "\(alamoreRequest.currentTemp)"
+        self.location.text = alamoreRequest.cityName
+        self.weatherType.text = alamoreRequest.weatherType
+    }
+    
+    
 }
 
