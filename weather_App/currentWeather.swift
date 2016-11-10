@@ -11,10 +11,10 @@ import Alamofire
 
 class CurrentWeather {
     
-    var _cityName : String!
-    var _date : String!
-    var _weatherType : String!
-    var _currentTemp : Double!
+    private var _cityName : String!
+    private var _date : String!
+    private var _weatherType : String!
+    private var _currentTemp : Double!
     
     var cityName: String {
         if _cityName == nil {
@@ -32,24 +32,24 @@ class CurrentWeather {
         dateFormatter.timeStyle = .none
         let currentDate = dateFormatter.string(from: Date())
         self._date = "Today, \(currentDate)"
-        return _date
+        return self._date
     }
     
     var weatherType : String {
         if _weatherType == nil  {
             _weatherType = ""
         }
-        return _weatherType
+        return self._weatherType
     }
     
     var currentTemp : Double {
         if _currentTemp == nil {
             _currentTemp = 0.0
         }
-        return _currentTemp
+        return self._currentTemp
     }
     
-    func downloadWeatherDetails(completed: DownloadComplete) {
+    func downloadWeatherDetails(completed: @escaping DownloadComplete) {
         let currentWeatherURL = URL(string: CURRENT_WEATHER_URL)
         if let url = currentWeatherURL {
             Alamofire.request(url).responseJSON { response in
@@ -66,22 +66,21 @@ class CurrentWeather {
                     guard let main = dic["main"] as? Dictionary<String, AnyObject>, main != nil else {
                         return
                     }
-                    
                     guard let temp = main["temp"] as? Double, temp != 0.0 else {
                         return
                     }
+                    
                     self._cityName    = name
-                    self._weatherType = wtype 
-                    self._currentTemp = temp
-                    print(self._cityName)
-                    print(self._weatherType)
-                    print(self._currentTemp)
-                
+                    self._weatherType = wtype
+                    let kelvin = (temp * (9/5) - 459.67)
+                    self._currentTemp = Double(round(10 * kelvin))
+                   
                 }
+                completed()
             }
             
         }
-       completed() 
+      
     }
     
 }

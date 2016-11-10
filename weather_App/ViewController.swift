@@ -29,7 +29,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.alamoreRequest.downloadWeatherDetails {
             self.weatherui()
         }
-        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -45,11 +44,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func weatherui() {
-        print(alamoreRequest.cityName)
-        self.dateLabel.text = alamoreRequest.date
-        self.temperatur.text = "\(alamoreRequest.currentTemp)"
-        self.location.text = alamoreRequest.cityName
-        self.weatherType.text = alamoreRequest.weatherType
+        self.dateLabel.text = self.alamoreRequest.date
+        self.temperatur.text = "\(self.alamoreRequest.currentTemp)"
+        self.location.text = self.alamoreRequest.cityName
+        self.weatherType.text = self.alamoreRequest.weatherType
     }
     
     
