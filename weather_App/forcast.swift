@@ -43,4 +43,17 @@ class forcast {
         return _lowTemp
     }
     
+    init(weatherDict: Dictionary<String, AnyObject>) {
+        guard let temp = weatherDict["temp"] as? Dictionary<String, AnyObject>, temp != nil else {
+            return
+        }
+        guard let min = temp["main"] as? Double, min != 0.0 else {
+            return
+        }
+        
+        let kelvin = (min * (9/5) - 459.67)
+        
+        
+    }
+    
 }

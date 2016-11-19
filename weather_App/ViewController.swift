@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -18,6 +19,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var CustomTable : UITableView!
     
     var alamoreRequest : CurrentWeather!
+    var Forcast        : forcast!
+    var forscats = [forcast]()
+    var FcType = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,17 +33,50 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.alamoreRequest.downloadWeatherDetails {
             self.weatherui()
         }
+        self.donwloadForcastData()
+        
+
+    }
+    
+    func donwloadForcastData() {
+        let forecastURL = URL(string: FORECAST_CAST)!
+        Alamofire.request(forecastURL).responseJSON {
+            response in
+            let result = response.result
+            guard let dict = result.value  as? Dictionary<String, AnyObject>, dict != nil else {
+                return
+            }
+            guard let list = dict["list"] as? [Dictionary<String, AnyObject>], list != nil else {
+                return
+            }
+            for weather in list {
+                guard let content = weather["weather"] as? [Dictionary<String, AnyObject>], content != nil else {
+                    return
+                }
+                guard let main = content[0]["main"] as? String, main != "" else {
+                    return
+                }
+                
+                self.FcType.append(main)
+                
+            }
+            print(self.FcType)
+        }
+        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return self.FcType.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "weatherCell", for: indexPath)
+        
+        
+        
         return cell
     }
     
@@ -49,7 +86,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.location.text = self.alamoreRequest.cityName
         self.weatherType.text = self.alamoreRequest.weatherType
     }
-    
     
 }
 
