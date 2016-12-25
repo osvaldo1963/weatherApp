@@ -11,10 +11,11 @@ import Alamofire
 
 class CurrentWeather {
     
-    private var _cityName : String!
-    private var _date : String!
-    private var _weatherType : String!
-    private var _currentTemp : Double!
+    var _cityName    : String!
+    var _date        : String!
+    var _weatherType : String!
+    var _currentTemp : Double!
+    let constant = constans()
     
     var cityName: String {
         if _cityName == nil {
@@ -50,13 +51,17 @@ class CurrentWeather {
     }
     
     func downloadWeatherDetails(completed: @escaping DownloadComplete) {
-        let currentWeatherURL = URL(string: CURRENT_WEATHER_URL)
+        let currentWeatherURL = URL(string: constant.forecast_url)
         if let url = currentWeatherURL {
             Alamofire.request(url).responseJSON { response in
                 if let dic = response.result.value as? Dictionary<String, AnyObject> {
+                    
+                    print(dic)
+                    
                     guard let name = dic["name"] as? String, name != "" else {
                         return
                     }
+                    
                     guard let weather = dic["weather"] as? [Dictionary<String, AnyObject>], weather != nil else {
                         return
                     }
@@ -73,11 +78,12 @@ class CurrentWeather {
                     self._cityName    = name
                     self._weatherType = wtype
                     let kelvin = (temp * (9/5) - 459.67)
-                    self._currentTemp = Double(round(10 * kelvin))
+                    self._currentTemp = Double(round(10 * kelvin / 10))
                    
                 }
-                completed()
+                
             }
+            completed()
             
         }
       

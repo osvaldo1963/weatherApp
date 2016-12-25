@@ -9,6 +9,11 @@
 import UIKit
 
 class weatherCellTableViewCell: UITableViewCell {
+    
+    @IBOutlet weak var DayLabel: UILabel!
+    @IBOutlet weak var WeatherType: UILabel!
+    @IBOutlet weak var fareight: UILabel!
+    @IBOutlet weak var celsious: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -18,10 +18,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var weatherType : UILabel!
     @IBOutlet weak var CustomTable : UITableView!
     
-    var alamoreRequest : CurrentWeather!
-    var Forcast        : forcast!
-    var forscats = [forcast]()
-    var FcType = [String]()
+    private var alamoreRequest : CurrentWeather!
+    private var Forcast        : forcast!
+    private var forscats = [forcast]()
+    private var FcType = [""]
+    private var http : httpRequest!
+    private var finalData  = [""]
+    private let constant = constans()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,13 +36,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.alamoreRequest.downloadWeatherDetails {
             self.weatherui()
         }
-        self.donwloadForcastData()
-        
 
     }
     
-    func donwloadForcastData() {
-        let forecastURL = URL(string: FORECAST_CAST)!
+    func donwloadForcastData(finish: @escaping finsh) {
+        self.FcType.removeAll(keepingCapacity: false)
+        let forecastURL = URL(string: self.constant.forecast_url)!
         Alamofire.request(forecastURL).responseJSON {
             response in
             let result = response.result
@@ -49,19 +51,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             guard let list = dict["list"] as? [Dictionary<String, AnyObject>], list != nil else {
                 return
             }
-            for weather in list {
-                guard let content = weather["weather"] as? [Dictionary<String, AnyObject>], content != nil else {
-                    return
-                }
-                guard let main = content[0]["main"] as? String, main != "" else {
-                    return
-                }
-                
-                self.FcType.append(main)
-                
+            
+            for list in list {
+                let forecast = forcast(weatherDict: list)
+                self.forscats.append(forecast)
             }
-            print(self.FcType)
+            finish(self.FcType)
         }
+    
+        
         
     }
     
@@ -73,8 +71,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "weatherCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "weatherCell", for: indexPath) as! weatherCellTableViewCell
         
+        cell.DayLabel.text = "jus  a test"
         
         
         return cell
